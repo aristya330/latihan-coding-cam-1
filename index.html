@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sapa Anak Anjing 🐾</title>
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Extend Tailwind theme with custom pastel background (HSL sat ≤ 30%, lightness ≥ 85%) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pastel: 'hsl(45, 25%, 92%)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom pastel background applied via inline style below since Tailwind
+       arbitrary values need the Play CDN JIT; using CSS var as fallback */
+    body {
+      background-color: hsl(45, 25%, 92%);
+    }
+
+    /* Speech bubble initial + transition state */
+    #speech-bubble {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 300ms ease-in-out, visibility 300ms ease-in-out;
+    }
+    #speech-bubble.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Speech bubble downward-pointing tail */
+    #speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px 8px 0 8px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+    }
+
+    /* Bounce animation */
+    @keyframes bouncePuppy {
+      0%, 100% { transform: translateY(0); }
+      25%       { transform: translateY(-18px); }
+      50%       { transform: translateY(0); }
+      75%       { transform: translateY(-10px); }
+    }
+    .animate-bounce-puppy {
+      animation: bouncePuppy 800ms ease-in-out;
+    }
+
+    /* Wiggle animation */
+    @keyframes wigglePuppy {
+      0%, 100% { transform: rotate(0deg); }
+      20%       { transform: rotate(12deg); }
+      40%       { transform: rotate(-12deg); }
+      60%       { transform: rotate(10deg); }
+      80%       { transform: rotate(-8deg); }
+    }
+    .animate-wiggle-puppy {
+      animation: wigglePuppy 800ms ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center">
+  <main class="flex flex-col items-center gap-6">
+
+    <!-- Puppy Card -->
+    <section id="puppy-card" class="relative flex flex-col items-center">
+
+      <!-- Speech Bubble Wrapper -->
+      <div id="speech-bubble-wrapper" class="relative flex justify-center w-full" style="min-height: 56px; margin-bottom: 8px;">
+        <div id="speech-bubble"
+             class="absolute bg-white rounded-xl px-5 py-3 text-gray-800 font-semibold text-base shadow-md whitespace-nowrap"
+             style="bottom: 0;">
+          Halo! Guk guk! 🐾
+        </div>
+      </div>
+
+      <!-- Puppy Image -->
+      <img
+        id="puppy-img"
+        src="https://placedog.net/400/400"
+        alt="Cute puppy"
+        class="w-64 sm:w-80 rounded-2xl"
+        onerror="this.src='https://via.placeholder.com/320x320?text=🐶'; this.onerror=null;"
+      />
+    </section>
+
+    <!-- Greet Button -->
+    <button
+      id="greet-btn"
+      class="bg-pink-400 text-white text-lg rounded-xl px-6 py-3
+             hover:bg-pink-500 hover:scale-105 transition-all duration-200
+             focus:outline-none focus:ring-2 focus:ring-pink-600"
+    >
+      Sapa Anak Anjing
+    </button>
+
+  </main>
+
+  <script>
+    // ─── State ───────────────────────────────────────────────────────────────
+    let isAnimating = false;
+    let currentAnimClass = null;
+
+    const ANIMATIONS = ['animate-bounce-puppy', 'animate-wiggle-puppy'];
+
+    // ─── DOM refs ─────────────────────────────────────────────────────────────
+    const bubble = document.getElementById('speech-bubble');
+    const img    = document.getElementById('puppy-img');
+    const btn    = document.getElementById('greet-btn');
+
+    // ─── Functions ────────────────────────────────────────────────────────────
+
+    /** Show the speech bubble. Idempotent — repeated calls are no-ops. */
+    function showSpeechBubble() {
+      if (!bubble.classList.contains('visible')) {
+        bubble.classList.add('visible');
+      }
+    }
+
+    /** Trigger a random bounce or wiggle animation on the puppy image. */
+    function triggerAnimation() {
+      const chosen = ANIMATIONS[Math.floor(Math.random() * ANIMATIONS.length)];
+
+      if (isAnimating) {
+        // Remove existing class and force reflow so the browser re-triggers the animation
+        img.classList.remove(currentAnimClass);
+        void img.offsetWidth; // force reflow
+      }
+
+      currentAnimClass = chosen;
+      isAnimating = true;
+      img.classList.add(chosen);
+
+      // Capture the class added in this call so the cleanup only affects this run
+      const thisClass = chosen;
+      img.addEventListener('animationend', function handler() {
+        // Only clean up if this handler belongs to the current animation
+        if (currentAnimClass === thisClass) {
+          img.classList.remove(thisClass);
+          isAnimating = false;
+          currentAnimClass = null;
+        }
+        img.removeEventListener('animationend', handler);
+      });
+    }
+
+    // ─── Event Wiring ────────────────────────────────────────────────────────
+
+    window.addEventListener('load', function () {
+      showSpeechBubble();
+      triggerAnimation();
+    });
+
+    btn.addEventListener('click', function () {
+      showSpeechBubble();
+      triggerAnimation();
+    });
+  </script>
+</body>
+</html>
