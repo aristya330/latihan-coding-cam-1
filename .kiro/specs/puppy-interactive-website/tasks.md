@@ -57,12 +57,12 @@ Implement a single self-contained `index.html` file that delivers the full puppy
     - Ensure the script tag is placed at the bottom of `<body>` and uses no modules (file:// compatibility)
     - _Requirements: 5.1, 6.1, 6.2, 7.1, 7.3, 7.4_
 
-- [-] 6. Checkpoint — Verify core page in browser
+- [x] 6. Checkpoint — Verify core page in browser
   - Open `index.html` via `file://` in Chrome, Firefox, or Edge; confirm: speech bubble and animation play on load, button triggers both, zero `console.error` entries, no horizontal scrollbar at 320px, image centered, pastel background visible.
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 7. Set up the test harness and write unit tests
-  - [-] 7.1 Set up test environment
+- [x] 7. Set up the test harness and write unit tests
+  - [x] 7.1 Set up test environment
     - Create `test/` directory at project root
     - Initialize `package.json` with `npm init -y`; install `vitest`, `jsdom`, and `@vitest/coverage-v8` as dev dependencies (pinned versions)
     - Create `vitest.config.js` setting `environment: 'jsdom'`

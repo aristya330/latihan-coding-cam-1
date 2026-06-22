@@ -1,0 +1,19 @@
+{
+  "name": "puppy-interactive-website",
+  "version": "1.0.0",
+  "description": "A child-friendly interactive puppy webpage",
+  "main": "index.html",
+  "scripts": {
+    "test": "vitest --run",
+    "test:coverage": "vitest --run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "3.2.4",
+    "fast-check": "3.23.2",
+    "jsdom": "26.1.0",
+    "vitest": "3.2.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
